@@ -15,14 +15,14 @@ void    MESSAGE_handler(int sig)
 
 void    send_character(pid_t server_id, char c)
 {
-    int i;
-    int bit;
+    unsigned int i;
+    unsigned int bit;
 
-    i = 8;
-    while (i--)
+    i = 0;
+    while (i++ < 8)
     {
-        bit = (c >> i & 1);
-        if (bit == 1)
+        bit = c & (0b10000000 >> i);
+        if (bit != 0)
             safe_kill(server_id, SIGUSR1);
         else
             safe_kill(server_id, SIGUSR2);
@@ -30,7 +30,15 @@ void    send_character(pid_t server_id, char c)
             usleep(10);
         READY = 0;
     }
+/*    //printf("%c\n", res);
+    if (res != '\0')
+    {
+        write(1, "|", 1);
+        write(1, &res, 1);
+        write(1, "|", 1);
+    }*/   
 }
+
 
 int main(int ac, char **av)
 {             

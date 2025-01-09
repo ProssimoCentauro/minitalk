@@ -1,50 +1,52 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <signal.h>
-
+#include "minitalk.h"
 
 int READY = 0;
 
-void    READY_handler(int pid)
+void    READY_handler(int sig)
 {
-    if (pid == SIGUSR1)
-    {
-        printf();
-    }
     READY = 1;
 }
 
-void    send_chars(pid_t server_id, char *str)
+void    MESSAGE_handler(int sig)
+{
+    printf("MESSAGE RECEIVED!");
+    exit(EXIT_SUCCESS);
+}
+
+void    send_character(pid_t server_id, char c)
 {
     int i;
     int bit;
 
-    i = 8;  
+    i = 8;
     while (i--)
     {
-        bit = (num >> i & 1);
-        //printf("%c\n" , bit + '0');
+        bit = (c >> i & 1);
         if (bit == 1)
-            kill(server_id, SIGUSR1);
+            safe_kill(server_id, SIGUSR1);
         else
-            kill(server_id, SIGUSR2);
+            safe_kill(server_id, SIGUSR2);
+        while (READY == 0)
+            usleep(10);
+        READY = 0;
     }
-    READY = 0;
-    while (READY == 0)
-        usleep(10);
-
 }
 
 int main(int ac, char **av)
-{
+{             
     int num;
     pid_t   server_id;
 
     server_id = atoi(av[1]);
-    send_chars(server_id, av[2]);
+    signal(SIGUSR1, READY_handler);
+    signal(SIGUSR2, MESSAGE_handler);
     
-    signal(SIGUSR1, )
-    printf("%d\n", num);
+    while (*av[2])
+    {
+        send_character(server_id, *av[2]);
+        av[2]++;
+    }
+    send_character(server_id, '\0');
+
     return (0);
 }

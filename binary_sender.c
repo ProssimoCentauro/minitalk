@@ -9,34 +9,30 @@ void    READY_handler(int sig)
 
 void    MESSAGE_handler(int sig)
 {
-    printf("MESSAGE RECEIVED!");
+    printf("\n-------------------------------------------\n");
+    printf("server: MESSAGE RECEIVED! good work client!\n");
+    printf("-------------------------------------------\n");
     exit(EXIT_SUCCESS);
 }
 
 void    send_character(pid_t server_id, char c)
 {
-    unsigned int i;
+    unsigned int position;
     unsigned int bit;
 
-    i = 0;
-    while (i++ < 8)
+    position = 0;
+    while (position < 8)
     {
-        bit = c & (0b10000000 >> i);
+        bit = c & (0b10000000 >> position);
         if (bit != 0)
             safe_kill(server_id, SIGUSR1);
         else
             safe_kill(server_id, SIGUSR2);
-        while (READY == 0)
+        position++;
+        while (!READY)
             usleep(10);
         READY = 0;
     }
-/*    //printf("%c\n", res);
-    if (res != '\0')
-    {
-        write(1, "|", 1);
-        write(1, &res, 1);
-        write(1, "|", 1);
-    }*/   
 }
 
 
@@ -54,7 +50,7 @@ int main(int ac, char **av)
         send_character(server_id, *av[2]);
         av[2]++;
     }
-    send_character(server_id, '\0');
+    send_character(server_id, *av[2]);
 
     return (0);
 }

@@ -2,10 +2,12 @@
 
 static int set_bit(int sig)
 {
+    int bit;
     if (sig == SIGUSR1)
-        return (1);
+        bit = 1;
     else if (sig == SIGUSR2)
-        return (0);
+        bit = 0;
+    return (bit);
 }
 
 static  int check_char(unsigned char *res, int *pos, pid_t id)
@@ -43,7 +45,7 @@ static void    signal_handler(int sig, siginfo_t *info, void *context)
     safe_kill(client_id, SIGUSR1);
 }
 
-int main()
+int main(void)
 {
     ft_printf("-------------------------\n");
     ft_printf("| SERVER PID: %d     |\n", getpid());

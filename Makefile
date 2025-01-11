@@ -17,8 +17,8 @@ IFLAGS = -I $(HEADER_DIR)
 IFLAGS_BONUS = -I $(HEADER_BONUS_DIR)
 
 #Rules
-libft:
-	echo "COMPILING THE LIBFT..."
+cc_libft:
+	@echo "COMPILING THE LIBFT..."
 	cd libft/ && make
 
 cc_client:
@@ -33,10 +33,12 @@ cc_client_bonus:
 cc_server_bonus:
 	$(CC) $(CFLAGS) $(IFLAGS_BONUS) $(SERVER_BONUS_DIR) $(LIBFT_DIR) -o server_bonus
 
+check_paths:
+	@ls $(CLIENT_DIR) $(SERVER_DIR) $(LIBFT_DIR)
 
-all: libft cc_client cc_server
+all: cc_libft cc_client cc_server
 
-bonus: libft cc_client_bonus cc_server_bonus
+bonus: cc_libft cc_client_bonus cc_server_bonus
 
 clean: cd libft/ && make clean
 

@@ -4,11 +4,13 @@ int READY = 0;
 
 static void    READY_handler(int sig)
 {
+    (void)sig;
     READY = 1;
 }
 
 static void    MESSAGE_handler(int sig)
 {
+    (void)sig;
     ft_printf("\n-------------------------------------------\n");
     ft_printf("server: MESSAGE RECEIVED! good work client!\n");
     ft_printf("-------------------------------------------\n");
@@ -38,12 +40,17 @@ static void    send_character(pid_t server_id, char c)
 
 int main(int ac, char **av)
 {             
-    int num;
     pid_t   server_id;
 
+    if (ac != 3)
+    {
+        ft_printf("BAD ARGUMENTS NUMBER!\n");
+        ft_printf("needed server PID and the MESSAGE\n");
+        exit(EXIT_FAILURE);
+    }
     server_id = atoi(av[1]);
-    signal(SIGUSR1, READY_handler);
-    signal(SIGUSR2, MESSAGE_handler);
+    safe_signal(SIGUSR1, READY_handler);
+    safe_signal(SIGUSR2, MESSAGE_handler);
     
     while (*av[2])
     {

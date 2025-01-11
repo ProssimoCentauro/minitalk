@@ -9,6 +9,15 @@ void    safe_sigaction(int sig, const struct sigaction ac)
     }
 }
 
+void    safe_signal(int sig, void (*handler)(int))
+{
+    if (signal(sig, handler) == SIG_ERR)
+    {
+        ft_printf("\n><><>SIGNAL ERROR!<><><\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
 void    safe_kill(pid_t id, int sig)
 {
     if (kill(id, sig) == -1)

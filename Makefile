@@ -1,52 +1,66 @@
-#Variables
+# Variables
 NAME = client server
 NAME_BONUS = client_bonus server_bonus
-CLIENT_DIR = ./minitalk_srcs/client/client.c
-SERVER_DIR = ./minitalk_srcs/server/server.c
-CLIENT_BONUS_DIR = ./minitalk_srcs/client_bonus/client_bonus.c
-SERVER_BONUS_DIR = ./minitalk_srcs/server_bonus/server_bonus.c
 
-HEADER_DIR = ./minitalk_headers/minitalk.h
-HEADER_BONUS_DIR = ./minitalk_headers/minitalki_bonus.h
-LIBFT_DIR = ./libft/libft.a
+CLIENT_SRC = ./minitalk_srcs/client/client.c
+SERVER_SRC = ./minitalk_srcs/server/server.c
+CLIENT_BONUS_SRC = ./minitalk_srcs/client/client_bonus.c
+SERVER_BONUS_SRC = ./minitalk_srcs/server/server_bonus.c
 
-#Compilation
+UTILS_SRC = ./minitalk_srcs/utils/mini_utils.c
+UTILS_BONUS_SRC = ./minitalk_srcs/utils/mini_utils_bonus.c
+
+CLIENT_OBJS = $(CLIENT_SRC:.c=.o)
+SERVER_OBJS = $(SERVER_SRC:.c=.o)
+CLIENT_BONUS_OBJS = $(CLIENT_BONUS_SRC:.c=.o)
+SERVER_BONUS_OBJS = $(SERVER_BONUS_SRC:.c=.o)
+UTILS_OBJS = $(UTILS_SRC:.c=.o)
+UTILS_BONUS_OBJS = $(UTILS_BONUS_SRC:.c=.o)
+
+HEADER_DIR = ./minitalk_headers
+LIBFT = ./libft/libft.a
+
+# Compilation
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 IFLAGS = -I $(HEADER_DIR)
-IFLAGS_BONUS = -I $(HEADER_BONUS_DIR)
 
-#Rules
-cc_libft:
-	@echo "COMPILING THE LIBFT..."
-	cd libft/ && make
+# Rules
+all: $(NAME)
 
-cc_client:
-	$(CC) $(CFLAGS) $(IFLAGS) $(CLIENT_DIR) $(LIBFT_DIR) -o client
+bonus: $(NAME_BONUS)
 
-cc_server:
-	$(CC) $(CFLAGS) $(IFLAGS) $(SERVER_DIR) $(LIBFT_DIR) -o server
+client: $(CLIENT_OBJS) $(UTILS_OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) $(CLIENT_OBJS) $(UTILS_OBJS) $(LIBFT) -o client
 
-cc_client_bonus:
-	$(CC) $(CFLAGS) $(IFLAGS_BONUS) $(CLIENT_BONUS_DIR) $(LIBFT_DIR) -o client_bonus
+server: $(SERVER_OBJS) $(UTILS_OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) $(SERVER_OBJS) $(UTILS_OBJS) $(LIBFT) -o server
 
-cc_server_bonus:
-	$(CC) $(CFLAGS) $(IFLAGS_BONUS) $(SERVER_BONUS_DIR) $(LIBFT_DIR) -o server_bonus
+client_bonus: $(CLIENT_BONUS_OBJS) $(UTILS_BONUS_OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) $(CLIENT_BONUS_OBJS) $(UTILS_BONUS_OBJS) $(LIBFT) -o client_bonus
 
-check_paths:
-	@ls $(CLIENT_DIR) $(SERVER_DIR) $(LIBFT_DIR)
+server_bonus: $(SERVER_BONUS_OBJS) $(UTILS_BONUS_OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) $(SERVER_BONUS_OBJS) $(UTILS_BONUS_OBJS) $(LIBFT) -o server_bonus
 
-all: cc_libft cc_client cc_server
+%.o: %.c
+	$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
 
-bonus: cc_libft cc_client_bonus cc_server_bonus
+$(LIBFT):
+	@echo "Compiling Libft..."
+	@make -C ./libft
 
-clean: cd libft/ && make clean
+clean:
+	@echo "Cleaning object files..."
+	@rm -f $(CLIENT_OBJS) $(SERVER_OBJS) $(CLIENT_BONUS_OBJS) $(SERVER_BONUS_OBJS) $(UTILS_OBJS) $(UTILS_BONUS_OBJS)
+	@make -C ./libft clean
 
-fclean: $(RM) $(NAME) $(NAME_BONUS)
-	cd libft/ && make fclean
+fclean: clean
+	@echo "Cleaning binaries..."
+	@rm -f $(NAME) $(NAME_BONUS)
+	@make -C ./libft fclean
 
 re: fclean all
 
 re_bonus: fclean bonus
 
-.PHONY: all bonus clean fclean re re_bonus
+.PHONY: all bonus clean fclean re re_bonus client server client_bonus server_bonus

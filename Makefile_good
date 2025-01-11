@@ -1,0 +1,53 @@
+# Variables
+NAME = client server
+NAME_BONUS = client_bonus server_bonus
+
+CLIENT_SRC = ./minitalk_srcs/client/client.c
+SERVER_SRC = ./minitalk_srcs/server/server.c
+CLIENT_BONUS_SRC = ./minitalk_srcs/client_bonus/client_bonus.c
+SERVER_BONUS_SRC = ./minitalk_srcs/server_bonus/server_bonus.c
+
+HEADER_DIR = ./minitalk_headers
+LIBFT = ./libft/libft.a
+
+# Compilation
+CC = cc
+CFLAGS = -Wall -Wextra -Werror
+IFLAGS = -I $(HEADER_DIR)
+
+# Rules
+all: $(NAME)
+
+bonus: $(NAME_BONUS)
+
+client: $(LIBFT)
+	$(CC) $(CFLAGS) $(IFLAGS) $(CLIENT_SRC) $(LIBFT) -o client
+
+server: $(LIBFT)
+	$(CC) $(CFLAGS) $(IFLAGS) $(SERVER_SRC) $(LIBFT) -o server
+
+client_bonus: $(LIBFT)
+	$(CC) $(CFLAGS) $(IFLAGS) $(CLIENT_BONUS_SRC) $(LIBFT) -o client_bonus
+
+server_bonus: $(LIBFT)
+	$(CC) $(CFLAGS) $(IFLAGS) $(SERVER_BONUS_SRC) $(LIBFT) -o server_bonus
+
+$(LIBFT):
+	@echo "Compiling Libft..."
+	@make -C ./libft
+
+clean:
+	@echo "Cleaning object files..."
+	@make -C ./libft clean
+
+fclean: clean
+	@echo "Cleaning binaries..."
+	@make -C ./libft fclean
+	@rm -f $(NAME) $(NAME_BONUS)
+
+re: fclean all
+
+re_bonus: fclean bonus
+
+.PHONY: all bonus clean fclean re re_bonus client server client_bonus server_bonus
+

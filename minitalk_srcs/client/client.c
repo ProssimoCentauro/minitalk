@@ -1,21 +1,21 @@
-#include "minitalk.h"
+#include "../../minitalk_headers/minitalk.h"
 
 int READY = 0;
 
-void    READY_handler(int sig)
+static void    READY_handler(int sig)
 {
     READY = 1;
 }
 
-void    MESSAGE_handler(int sig)
+static void    MESSAGE_handler(int sig)
 {
-    printf("\n-------------------------------------------\n");
-    printf("server: MESSAGE RECEIVED! good work client!\n");
-    printf("-------------------------------------------\n");
+    ft_printf("\n-------------------------------------------\n");
+    ft_printf("server: MESSAGE RECEIVED! good work client!\n");
+    ft_printf("-------------------------------------------\n");
     exit(EXIT_SUCCESS);
 }
 
-void    send_character(pid_t server_id, char c)
+static void    send_character(pid_t server_id, char c)
 {
     unsigned int position;
     unsigned int bit;

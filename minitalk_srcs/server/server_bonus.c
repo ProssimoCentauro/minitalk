@@ -1,6 +1,6 @@
-#include "minitalk.h"
+#include "../../minitalk_headers/minitalk_bonus.h"
 
-int set_bit(int sig)
+static int set_bit(int sig)
 {
     if (sig == SIGUSR1)
         return (1);
@@ -8,12 +8,12 @@ int set_bit(int sig)
         return (0);
 }
 
-int check_char(unsigned char *res, int *pos, pid_t id)
+static  int check_char(unsigned char *res, int *pos, pid_t id)
 {
     *pos = 0;
     if (!*res)
     {
-        printf("\n^ ^ ^ MESSAGE RECEIVED FROM CLIENT: %d ^ ^ ^\n\n\n\n", id);
+        ft_printf("\n^ ^ ^ MESSAGE RECEIVED FROM CLIENT: %d ^ ^ ^\n\n\n\n", id);
         safe_kill(id, SIGUSR2);
         return (0);
     }
@@ -22,7 +22,7 @@ int check_char(unsigned char *res, int *pos, pid_t id)
     return (1);
 }
 
-void    signal_handler(int sig, siginfo_t *info, void *context)
+static void    signal_handler(int sig, siginfo_t *info, void *context)
 {
     static int  pos = 0;
     static unsigned char  res = 0;
@@ -45,10 +45,10 @@ void    signal_handler(int sig, siginfo_t *info, void *context)
 
 int main()
 {
-    printf("-------------------------\n");
-    printf("| SERVER PID: %d     |\n", getpid());
-    printf("| WAITING FOR CLIENT... |\n", getpid());
-    printf("-------------------------\n\n\n\n");
+    ft_printf("-------------------------\n");
+    ft_printf("| SERVER PID: %d     |\n", getpid());
+    ft_printf("| WAITING FOR CLIENT... |\n", getpid());
+    ft_printf("-------------------------\n\n\n\n");
 
     struct sigaction ac;
 

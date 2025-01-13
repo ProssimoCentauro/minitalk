@@ -19,3 +19,4 @@ Technologies used in the project:
 *   C language
 *   UNIX Signals
 *   Process IDs
+*   The Libft

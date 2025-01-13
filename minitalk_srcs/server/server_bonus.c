@@ -4,6 +4,7 @@ static int	set_bit(int sig)
 {
 	int	bit;
 
+	bit = 0;
 	if (sig == SIGUSR1)
 		bit = 1;
 	else if (sig == SIGUSR2)
@@ -16,7 +17,6 @@ static int	check_char(unsigned char *res, int *pos, pid_t id)
 	*pos = 0;
 	if (!*res)
 	{
-		ft_printf("\n^ ^ ^ MESSAGE RECEIVED FROM CLIENT: %d ^ ^ ^\n\n\n\n", id);
 		safe_kill(id, SIGUSR2);
 		return (0);
 	}

@@ -31,9 +31,9 @@ static void	send_character(pid_t server_id, char c)
 		else
 			safe_kill(server_id, SIGUSR2);
 		position++;
-		while (!READY)
+		while (!g_ready)
 			usleep(10);
-		READY = 0;
+		g_ready = 0;
 	}
 }
 
